@@ -410,9 +410,11 @@ def evaluate_all_expressions(a, b, c, d):
     return results
 
 
-def get_weight(a, b, c, d):
+def get_weight(a, b, c, d, factorial_cache):
     counts = Counter([a, b, c, d])
-    return prod(prod(range(4, 4 - count, -1)) for count in counts.values())
+    return prod(
+        factorial_cache[4] // factorial_cache[4 - count] for count in counts.values()
+    )
 
 
 def generate_distribution():
@@ -425,7 +427,7 @@ def generate_distribution():
             unique_results = set()
             for perm in permutations(combination):
                 unique_results.update(evaluate_all_expressions(*perm))
-            weight = get_weight(*combination)
+            weight = get_weight(*combination, factorial_cache)
             for result in unique_results:
                 distribution[result] += weight
             pbar.update(1)
